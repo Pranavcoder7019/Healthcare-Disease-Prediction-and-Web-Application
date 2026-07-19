@@ -1,29 +1,20 @@
 import os
 import joblib
-from flask import Flask, request, jsonify
+from flask import Flask, render_template
 
 app = Flask(__name__)
 
-model = joblib.load('healthcare_model.pkl')
-scaler = joblib.load('scaler.pkl')
-encoders = joblib.load('encoder.pkl')
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def server_error(e):
+    return render_template('500.html'), 500
 
 @app.route('/')
 def index():
-    return "Clinical decision system is ready."
-
-@app.route('/predict', methods=['POST'])
-def predict():
-    try:
-        # Extract and validate inputs
-        age = float(request.form.get('age', 0))
-        bmi = float(request.form.get('bmi', 0))
-        # Basic boundary checks
-        if age <= 0 or bmi <= 0:
-            return jsonify({"error": "Invalid age or BMI"}), 400
-        return jsonify({"status": "Inputs validated"})
-    except ValueError:
-        return jsonify({"error": "Invalid numeric format"}), 400
+    return render_template('index.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
