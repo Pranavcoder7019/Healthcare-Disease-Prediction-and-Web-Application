@@ -1,14 +1,47 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Clinical Diagnostic Report</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Prediction Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Diagnostic Output</h1>
-    <div class="result-box">
-        <p>Patient Risk Status: <span class="risk-badge">Medium</span></p>
+    <div class="container">
+        <h1>Risk Prediction Result</h1>
+        <div class="panel">
+            <p><strong>Patient:</strong> {{ patient.name }}</p>
+            <p><strong>Age:</strong> {{ patient.age }}</p>
+            <p><strong>Gender:</strong> {{ patient.gender }}</p>
+            <p><strong>BMI:</strong> {{ patient.bmi }}</p>
+            <p><strong>Risk Level:</strong> {{ risk_level }}</p>
+            <p><strong>Confidence:</strong> {{ confidence }}%</p>
+        </div>
+
+        <div class="panel">
+            <h2>Recommendations</h2>
+            <h3>Lifestyle</h3>
+            <ul>
+                {% for item in recs.lifestyle %}
+                    <li>{{ item }}</li>
+                {% endfor %}
+            </ul>
+            <h3>Diet</h3>
+            <ul>
+                {% for item in recs.diet %}
+                    <li>{{ item }}</li>
+                {% endfor %}
+            </ul>
+            <h3>Medical</h3>
+            <ul>
+                {% for item in recs.medical %}
+                    <li>{{ item }}</li>
+                {% endfor %}
+            </ul>
+            <p><em>{{ recs.disclaimer }}</em></p>
+        </div>
+
+        <a class="button-link" href="{{ url_for('index') }}">Back to Home</a>
     </div>
-    <a href="/">Go Back</a>
 </body>
 </html>

@@ -2,13 +2,23 @@ import os
 import joblib
 import pandas as pd
 import numpy as np
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
 model = joblib.load('healthcare_model.pkl')
 scaler = joblib.load('scaler.pkl')
 encoders = joblib.load('encoder.pkl')
+
+def get_recommendations(data):
+    recs = []
+    if data['bmi'] >= 25.0:
+        recs.append("Dietary guidance for calorie deficit; exercise 150 mins weekly.")
+    if data['systolic_bp'] >= 130 or data['diastolic_bp'] >= 80:
+        recs.append("Reduce sodium intake; monitor blood pressure daily.")
+    if not recs:
+        recs.append("Vitals look great. Keep up a balanced diet and regular exercise.")
+    return recs
 
 @app.route('/')
 def index():
@@ -17,7 +27,6 @@ def index():
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
-        # Collect raw values
         data = {
             'age': float(request.form.get('age')),
             'bmi': float(request.form.get('bmi')),
@@ -34,22 +43,15 @@ def predict():
             'family_history': request.form.get('family_history'),
             'smoking': request.form.get('smoking')
         }
-        
         df_input = pd.DataFrame([data])
-        
-        # Categorical Encoders
         for col, encoder in encoders.items():
             if col != 'risk_level' and col in df_input.columns:
                 df_input[col] = encoder.transform(df_input[col])
-                
-        # Scale & predict (Buggy column order check here - fixed on Day 27!)
         scaled_features = scaler.transform(df_input)
         prediction = model.predict(scaled_features)[0]
-        
-        risk_labels = encoders['risk_level'].classes_
-        predicted_risk = risk_labels[prediction]
-        
-        return render_template('result.html', prediction=predicted_risk, input_data=data)
+        predicted_risk = encoders['risk_level'].classes_[prediction]
+        recs = get_recommendations(data)
+        return render_template('result.html', prediction=predicted_risk, input_data=data, recommendations=recs)
     except Exception as e:
         return render_template('500.html', error=str(e)), 500
 
