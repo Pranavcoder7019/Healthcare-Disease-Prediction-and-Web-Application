@@ -1,13 +1,23 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f7f6;
-    color: #333;
-    padding: 20px;
+/* Premium glassmorphic styling system */
+:root {
+    --primary-color: #4361ee;
+    --background-color: #f8f9fa;
+    --card-background: rgba(255, 255, 255, 0.7);
 }
-.form-container {
-    background: #fff;
-    border-radius: 8px;
-    padding: 20px;
-    max-width: 500px;
-    margin: 0 auto;
+body {
+    background: linear-gradient(135deg, #e0eafc, #cfdef3);
+    font-family: 'Outfit', sans-serif;
+    color: #2b2d42;
+    min-height: 100vh;
+}
+.glass-panel {
+    background: var(--card-background);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+    transition: transform 0.3s ease;
+}
+.glass-panel:hover {
+    transform: translateY(-5px);
 }
