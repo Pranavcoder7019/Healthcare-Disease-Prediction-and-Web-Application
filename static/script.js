@@ -14,3 +14,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+// Dark Mode Toggle
+const toggleBtn = document.getElementById('darkModeToggle');
+if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+        const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+    });
+}

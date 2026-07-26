@@ -36,3 +36,9 @@ body {
         backdrop-filter: none;
     }
 }
+
+[data-theme="dark"] {
+    --background-color: #121212;
+    --card-background: rgba(30, 30, 30, 0.7);
+    --primary-color: #70e000;
+}
