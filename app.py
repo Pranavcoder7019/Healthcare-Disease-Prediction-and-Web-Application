@@ -24,6 +24,10 @@ def evaluate_vitals_recommendations(data: dict) -> list:
         recommendations.append("Vitals look great. Keep up a balanced diet and regular exercise.")
     return recommendations
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
 @app.route('/')
 def index():
     """Renders landing interface and statistics dashboard."""

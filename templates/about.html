@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>About</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>About the Health Risk Predictor</h1>
+        <div class="panel">
+            <p>This project is a lightweight Flask application that predicts general health risk from patient indicators.</p>
+            <p>It is intended for educational and demonstration purposes and should not replace medical advice.</p>
+        </div>
+        <a class="button-link" href="{{ url_for('index') }}">Home</a>
+    </div>
+</body>
+</html>
