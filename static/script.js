@@ -1,25 +1,22 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Canvas setup
-    const ctx = document.getElementById('historyChart');
-    if (ctx) {
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['January', 'February', 'March', 'April'],
-                datasets: [{
-                    label: 'Risk Prediction Level',
-                    data: [1, 2, 1, 3]
-                }]
-            }
-        });
-    }
-});
-// Dark Mode Toggle
-const toggleBtn = document.getElementById('darkModeToggle');
-if (toggleBtn) {
-    toggleBtn.addEventListener('click', () => {
-        const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-theme', theme);
-        localStorage.setItem('theme', theme);
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.querySelector('form');
+    if (!form) return;
+
+    form.addEventListener('submit', function () {
+        const age = Number(form.age?.value || 0);
+        const height = Number(form.height?.value || 0);
+        const weight = Number(form.weight?.value || 0);
+
+        if (age <= 0 || age > 120) {
+            alert('Age must be between 1 and 120.');
+            return false;
+        }
+
+        if (height <= 0 || weight <= 0) {
+            alert('Height and weight must be positive.');
+            return false;
+        }
+
+        return true;
     });
-}
+});
