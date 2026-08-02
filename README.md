@@ -41,7 +41,42 @@ Healthcare-Prediction/
 5. **Printable Medical Reports**: Specifically styled printing layouts allowing patients to download clean clinical reports as PDF via browser print hooks.
 6. **Robust Input Validation**: Strict checks for numeric ranges and complete client/server-side error handling (with custom 404/500 pages).
 
+## Getting Started (Local Setup)
 
-## Features
+### Prerequisites
+- Python 3.10, 3.11, or 3.12+
+- `pip` package installer
 
-1. AI-Powered Diagnostics: Uses RandomForest classifier.
+### Installation
+1. Clone or extract the project files into your workspace directory.
+2. Open a terminal in the project folder.
+3. Install the dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+### Training the Model (Optional)
+If you need to re-train the machine learning model and regenerate the pickle files (`healthcare_model.pkl`, `scaler.pkl`, `encoder.pkl`):
+```bash
+python train_model.py
+```
+
+### Running the Application
+To run the local Flask development web server:
+```bash
+python app.py
+```
+After the server initializes, navigate to `http://127.0.0.1:5000` in your web browser.
+
+## Deployment Ready
+The application is pre-configured with the files needed for direct deployment on various cloud services:
+- **Heroku / Render / Railway**: Configured via the `Procfile` utilizing Gunicorn and `runtime.txt` configuring Python version compatibility.
+- **Render Setup**:
+  1. Link your GitHub repository.
+  2. Select **Web Service**.
+  3. Environment: `Python`.
+  4. Build Command: `pip install -r requirements.txt`.
+  5. Start Command: `gunicorn app:app`.
+
+---
+*Disclaimer: This system is designed as an educational clinical decision support demonstration. All outcomes must be evaluated by a certified medical practitioner.*
