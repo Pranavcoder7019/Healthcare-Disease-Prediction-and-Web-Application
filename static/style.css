@@ -1,44 +1,85 @@
-/* Premium glassmorphic styling system */
-:root {
-    --primary-color: #4361ee;
-    --background-color: #f8f9fa;
-    --card-background: rgba(255, 255, 255, 0.7);
-}
 body {
-    background: linear-gradient(135deg, #e0eafc, #cfdef3);
-    font-family: 'Outfit', sans-serif;
-    color: #2b2d42;
-    min-height: 100vh;
-}
-.glass-panel {
-    background: var(--card-background);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    border-radius: 16px;
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
-    transition: transform 0.3s ease;
-}
-.glass-panel:hover {
-    transform: translateY(-5px);
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: linear-gradient(135deg, #e8f5ff, #f8fbff);
+    color: #1c2b3a;
 }
 
-@media print {
-    body {
-        background: #fff;
-        color: #000;
-    }
-    .no-print, .nav-bar, button {
-        display: none !important;
-    }
-    .glass-panel {
-        border: none;
-        box-shadow: none;
-        backdrop-filter: none;
-    }
+.container {
+    max-width: 1000px;
+    margin: auto;
 }
 
-[data-theme="dark"] {
-    --background-color: #121212;
-    --card-background: rgba(30, 30, 30, 0.7);
-    --primary-color: #70e000;
+.hero {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+}
+
+.panel {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.field-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-weight: 600;
+}
+
+input, select, textarea, button {
+    font: inherit;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccd8e7;
+}
+
+button, .button-link {
+    display: inline-block;
+    margin-top: 14px;
+    text-decoration: none;
+    background: #2f80ed;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover, .button-link:hover {
+    background: #1f6fd1;
+}
+
+.full {
+    grid-column: 1 / -1;
+}
+
+.alert {
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.alert.error {
+    background: #ffe3e3;
+    color: #a01212;
+}
+
+@media (max-width: 760px) {
+    .grid, .field-grid {
+        grid-template-columns: 1fr;
+    }
 }
