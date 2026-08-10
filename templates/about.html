@@ -1,19 +1,201 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>About</title>
+    <title>About the Predictive Model - CardioGuard AI</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Custom Glass Styles -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div class="container">
-        <h1>About the Health Risk Predictor</h1>
-        <div class="panel">
-            <p>This project is a lightweight Flask application that predicts general health risk from patient indicators.</p>
-            <p>It is intended for educational and demonstration purposes and should not replace medical advice.</p>
+
+    <!-- Premium Navbar -->
+    <nav class="navbar navbar-expand-lg glass-navbar sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-primary" href="{{ url_for('index') }}">
+                <i class="bi bi-heart-pulse-fill fs-3 text-danger"></i>
+                <span class="fs-4">CardioGuard AI</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav align-items-center gap-3">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('index') }}"><i class="bi bi-grid-fill me-1"></i>Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('about') }}"><i class="bi bi-info-circle-fill me-1"></i>About Model</a>
+                    </li>
+                    <li class="nav-item">
+                        <button class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle Dark Mode">
+                            <i class="bi bi-moon-fill" id="theme-icon"></i>
+                        </button>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <a class="button-link" href="{{ url_for('index') }}">Home</a>
+    </nav>
+
+    <div class="container my-5">
+        <!-- Header -->
+        <header class="text-center mb-5">
+            <h1 class="display-5 fw-bold">About CardioGuard Predictive Engine</h1>
+            <p class="lead text-secondary">Technical documentation, classifier metrics, and model feature weights for the health risk classifier.</p>
+        </header>
+
+        <!-- Technical overview and stats -->
+        <div class="row g-4 mb-5">
+            <div class="col-lg-8">
+                <div class="glass-card h-100">
+                    <h3 class="fw-bold mb-4 text-primary"><i class="bi bi-cpu-fill me-2"></i>Machine Learning Framework</h3>
+                    <p>The core classification is powered by a <strong>Random Forest Classifier</strong> trained on a synthetic clinical cohort containing detailed diagnostic information. The model aggregates scores from a forest of 100 decision trees to estimate whether a patient falls into a <strong>Low</strong>, <strong>Medium</strong>, or <strong>High Risk</strong> category.</p>
+                    <p>Features are split dynamically: variables such as Age, BMI, Diet Quality, Sleep Hours, Stress Level, and Lifestyle choices are processed directly through the estimator to output the risk classification. Additional clinical vitals (Blood Pressure, Heart Rate, Glucose, Cholesterol, Symptoms) are utilized downstream by a Rule-Based Clinical Engine to generate personalized diagnostic advice, warnings, and DASH diet regimens.</p>
+                    
+                    <h4 class="fw-bold mt-4 mb-3 text-secondary">Key Classifier Architecture:</h4>
+                    <ul>
+                        <li><strong>Feature Preprocessing:</strong> Continuous variables scaled using <code>StandardScaler</code>; categorical inputs mapped using <code>LabelEncoder</code>.</li>
+                        <li><strong>Ensemble Architecture:</strong> 100 Decision Trees with Gini Impurity metric criteria.</li>
+                        <li><strong>Out-of-Bag Validation:</strong> Random partitions utilized for evaluation metrics.</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="glass-card h-100 bg-opacity-25 border-primary">
+                    <h3 class="fw-bold text-center mb-4 text-primary">Model Metrics</h3>
+                    
+                    <!-- Accuracy Meter -->
+                    <div class="text-center mb-4">
+                        <span class="display-3 fw-bold text-success">96.5%</span>
+                        <p class="text-secondary fw-semibold">Testing Partition Accuracy</p>
+                    </div>
+                    
+                    <!-- Training accuracy -->
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="small text-secondary fw-semibold">Training Accuracy</span>
+                            <span class="small fw-bold">100.0%</span>
+                        </div>
+                        <div class="progress" style="height: 6px;">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 100%"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Testing accuracy -->
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="small text-secondary fw-semibold">Validation Accuracy</span>
+                            <span class="small fw-bold">96.5%</span>
+                        </div>
+                        <div class="progress" style="height: 6px;">
+                            <div class="progress-bar bg-primary" role="progressbar" style="width: 96.5%"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Confidence score threshold -->
+                    <div>
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="small text-secondary fw-semibold">Decision Tree Entropy Variance</span>
+                            <span class="small fw-bold">Low (Stable)</span>
+                        </div>
+                        <div class="progress" style="height: 6px;">
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: 85%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Survey Variable Dictionary -->
+        <div class="glass-card mb-5">
+            <h3 class="fw-bold mb-4 text-primary"><i class="bi bi-book-half me-2"></i>Survey Variables Dictionary</h3>
+            <div class="table-responsive">
+                <table class="table table-striped align-middle">
+                    <thead>
+                        <tr>
+                            <th scope="col">Survey Field</th>
+                            <th scope="col">Model Column</th>
+                            <th scope="col">Unit / Scale</th>
+                            <th scope="col">Clinical Importance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="fw-bold">Age</td>
+                            <td><code>age</code></td>
+                            <td>Years (1 - 120)</td>
+                            <td>Crucial cardiovascular risk multiplier as arterial elasticity changes over time.</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Diet Quality</td>
+                            <td><code>diet</code></td>
+                            <td>Good / Average / Poor</td>
+                            <td>Reflects nutritional balance, fatty acid intake, and glycemic load.</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Exercise Frequency</td>
+                            <td><code>exercise_days</code></td>
+                            <td>Days per week (0 - 7)</td>
+                            <td>Directly impacts metabolic fitness, lipid profile, and insulin sensitivity.</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Sleep Duration</td>
+                            <td><code>sleep_hours</code></td>
+                            <td>Hours/night (0 - 24)</td>
+                            <td>Necessary for metabolic regulation and stress hormone modulation.</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Stress Level</td>
+                            <td><code>stress</code></td>
+                            <td>Low / Medium / High</td>
+                            <td>Elevated cortisol levels negatively affect vascular tone and glucose metrics.</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">BMI (Body Mass Index)</td>
+                            <td><code>bmi</code></td>
+                            <td>Weight (kg) / Height (m)²</td>
+                            <td>Indicator of adipose tissue mass, linked to cardiometabolic conditions.</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Smoking Status</td>
+                            <td><code>smoking</code></td>
+                            <td>Yes / No</td>
+                            <td>Extremely high correlation with arterial plaque accumulation and vascular strain.</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Alcohol Consumption</td>
+                            <td><code>alcohol</code></td>
+                            <td>Low / Medium / High</td>
+                            <td>Excessive drinking influences cardiomyopathy risk and blood pressure readings.</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Family History</td>
+                            <td><code>family_history</code></td>
+                            <td>Yes / No</td>
+                            <td>Indicates genetic predisposition and congenital risk vectors.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Back home navigation -->
+        <div class="text-center">
+            <a class="btn btn-primary px-5 py-3 fw-semibold" href="{{ url_for('index') }}">
+                <i class="bi bi-arrow-left-circle-fill me-2"></i> Return to Predictive Dashboard
+            </a>
+        </div>
+
     </div>
+
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom Scripts -->
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

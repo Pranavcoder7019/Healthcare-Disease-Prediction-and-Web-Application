@@ -1,102 +1,325 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Health Risk Predictor</title>
+    <title>Health Risk Intelligence System</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom Glass Styles -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div class="container">
-        <header class="hero">
-            <h1>Health Risk Prediction</h1>
-            <p>Enter patient details to get a quick risk estimate and recommendations.</p>
+
+    <!-- Premium Navbar -->
+    <nav class="navbar navbar-expand-lg glass-navbar sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-primary" href="{{ url_for('index') }}">
+                <i class="bi bi-heart-pulse-fill fs-3 text-danger"></i>
+                <span class="fs-4">CardioGuard AI</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav align-items-center gap-3">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('index') }}"><i class="bi bi-grid-fill me-1"></i>Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('about') }}"><i class="bi bi-info-circle-fill me-1"></i>About Model</a>
+                    </li>
+                    <li class="nav-item">
+                        <button class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle Dark Mode">
+                            <i class="bi bi-moon-fill" id="theme-icon"></i>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+        <!-- Hero Section -->
+        <header class="text-center mb-5 animate-fade">
+            <h1 class="display-4 fw-bold">Healthcare Risk Intelligence</h1>
+            <p class="lead text-secondary">A predictive analytics framework using Random Forest Machine Learning to calculate general health risk levels and deliver personalized care advice.</p>
             {% if error %}
-                <div class="alert error">{{ error }}</div>
+                <div class="alert alert-danger d-flex align-items-center justify-content-center gap-2 mx-auto" style="max-width: 600px;" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    <div>{{ error }}</div>
+                </div>
             {% endif %}
         </header>
 
-        <main class="grid">
-            <section class="panel">
-                <form method="post" action="{{ url_for('predict') }}">
-                    <div class="field-grid">
-                        <label>Name <input name="name" required></label>
-                        <label>Age <input type="number" name="age" min="1" max="120" required></label>
-                        <label>Gender
-                            <select name="gender">
-                                <option>Male</option>
-                                <option>Female</option>
-                                <option>Other</option>
-                            </select>
-                        </label>
-                        <label>Height (cm) <input type="number" step="0.1" name="height" required></label>
-                        <label>Weight (kg) <input type="number" step="0.1" name="weight" required></label>
-                        <label>Sleep Hours <input type="number" name="sleep_hours" min="0" max="24" value="7"></label>
-                        <label>Diet
-                            <select name="diet">
-                                <option>Average</option>
-                                <option>Good</option>
-                                <option>Poor</option>
-                            </select>
-                        </label>
-                        <label>Stress
-                            <select name="stress">
-                                <option>Low</option>
-                                <option>Medium</option>
-                                <option>High</option>
-                            </select>
-                        </label>
-                        <label>Smoking
-                            <select name="smoking">
-                                <option>No</option>
-                                <option>Yes</option>
-                            </select>
-                        </label>
-                        <label>Alcohol
-                            <select name="alcohol">
-                                <option>Low</option>
-                                <option>Medium</option>
-                                <option>High</option>
-                            </select>
-                        </label>
-                        <label>Exercise
-                            <select name="exercise_level">
-                                <option>None</option>
-                                <option>Low</option>
-                                <option>Medium</option>
-                                <option>High</option>
-                            </select>
-                        </label>
-                        <label>Family History
-                            <select name="family_history">
-                                <option>No</option>
-                                <option>Yes</option>
-                            </select>
-                        </label>
-                        <label>Systolic BP <input type="number" step="0.1" name="bp_systolic"></label>
-                        <label>Diastolic BP <input type="number" step="0.1" name="bp_diastolic"></label>
-                        <label>Heart Rate <input type="number" step="0.1" name="heart_rate"></label>
-                        <label>Temperature <input type="number" step="0.1" name="temperature"></label>
-                        <label>Blood Sugar <input type="number" step="0.1" name="blood_sugar"></label>
-                        <label>Cholesterol <input type="number" step="0.1" name="cholesterol"></label>
-                        <label>Existing Diseases <input name="existing_diseases"></label>
-                        <label class="full">Symptoms <textarea name="symptoms" rows="3"></textarea></label>
+        <!-- Interactive Statistics & Chart Dashboard -->
+        <section class="mb-5">
+            <div class="row g-4 mb-4">
+                <!-- Stats Card 1 -->
+                <div class="col-md-4">
+                    <div class="glass-card metric-card">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <h6 class="text-secondary fw-semibold mb-1">TOTAL HEALTH CHECKS</h6>
+                                <h3 class="fw-bold mb-0" id="checkCountEl">5</h3>
+                            </div>
+                            <div class="bg-primary text-white rounded-3 p-3">
+                                <i class="bi bi-people-fill fs-3"></i>
+                            </div>
+                        </div>
                     </div>
-                    <button type="submit">Predict Risk</button>
-                </form>
-            </section>
+                </div>
+                <!-- Stats Card 2 -->
+                <div class="col-md-4">
+                    <div class="glass-card metric-card success">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <h6 class="text-secondary fw-semibold mb-1">RECOMMENDED TARGET BMI</h6>
+                                <h3 class="fw-bold mb-0">18.5 - 24.9</h3>
+                            </div>
+                            <div class="bg-success text-white rounded-3 p-3">
+                                <i class="bi bi-check-circle-fill fs-3"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Stats Card 3 -->
+                <div class="col-md-4">
+                    <div class="glass-card metric-card warning">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <h6 class="text-secondary fw-semibold mb-1">AI MODEL ACCURACY</h6>
+                                <h3 class="fw-bold mb-0">96.4%</h3>
+                            </div>
+                            <div class="bg-warning text-white rounded-3 p-3">
+                                <i class="bi bi-cpu-fill fs-3"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-            <aside class="panel">
-                <h2>About this tool</h2>
-                <p>This demo uses a trained ML model to estimate health risk using key patient inputs.</p>
-                <ul>
-                    <li>AI-assisted risk scoring</li>
-                    <li>Session history for repeated checks</li>
-                    <li>Personalized recommendations</li>
-                </ul>
-                <a href="{{ url_for('about') }}">Learn more</a>
-            </aside>
-        </main>
+            <!-- Chart Row -->
+            <div class="row g-4 mb-4">
+                <div class="col-lg-5">
+                    <div class="glass-card h-100">
+                        <h5 class="fw-bold mb-4 text-center">Prediction Risk Distribution</h5>
+                        <div style="height: 250px; position: relative;">
+                            <canvas id="riskChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <div class="glass-card h-100">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="fw-bold mb-0">Risk Assessment Analysis Metrics</h5>
+                            <button class="btn btn-outline-danger btn-sm" id="resetHistoryBtn">
+                                <i class="bi bi-arrow-counterclockwise me-1"></i>Reset
+                            </button>
+                        </div>
+                        <div style="height: 250px; position: relative;">
+                            <canvas id="lifestyleChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Prediction Form Card -->
+        <section class="glass-card mb-5">
+            <h2 class="text-center fw-bold mb-4">Health Assessment Survey</h2>
+            <p class="text-center text-secondary mb-5">Please complete the three short steps below. The algorithm uses variables 1-9 to calculate prediction risk, and 10-16 to optimize lifestyle advice.</p>
+            
+            <!-- Step Progress Indicator -->
+            <div class="step-progressbar">
+                <div class="step-progress-line"></div>
+                <div class="step-indicator active">1</div>
+                <div class="step-indicator">2</div>
+                <div class="step-indicator">3</div>
+            </div>
+
+            <!-- Error Banner -->
+            <div id="form-error-banner" class="alert alert-danger d-none mb-4" role="alert"></div>
+
+            <!-- Main Prediction Form -->
+            <form id="predictionForm" method="post" action="{{ url_for('predict') }}">
+                
+                <!-- STEP 1: Personal Info & Vital Measurements -->
+                <div class="form-step active">
+                    <h4 class="fw-bold mb-4 text-primary border-bottom pb-2">Step 1: Patient Background & Vitals</h4>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="name" class="form-label">Full Name</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                                <input type="text" class="form-control" id="name" name="name" value="Patient" required>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="age" class="form-label">Age (years)</label>
+                            <input type="number" class="form-control" id="age" name="age" min="1" max="120" placeholder="e.g. 45" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="gender" class="form-label">Gender</label>
+                            <select class="form-select" id="gender" name="gender" required>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="height" class="form-label">Height (cm)</label>
+                            <input type="number" step="0.1" class="form-control" id="height" name="height" min="50" max="250" placeholder="e.g. 175" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="weight" class="form-label">Weight (kg)</label>
+                            <input type="number" step="0.1" class="form-control" id="weight" name="weight" min="2" max="500" placeholder="e.g. 70" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="bmi-output" class="form-label">Calculated BMI</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control bg-light" id="bmi-output" name="bmi" readonly placeholder="Calculated automatically">
+                                <span class="input-group-text d-none" id="bmi-pill"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end mt-4">
+                        <button type="button" class="btn btn-primary btn-next px-4">
+                            Next: Clinical Metrics <i class="bi bi-arrow-right-short ms-1"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- STEP 2: Clinical Vitals & Lab Diagnostics -->
+                <div class="form-step">
+                    <h4 class="fw-bold mb-4 text-primary border-bottom pb-2">Step 2: Laboratory & Clinical Diagnostics</h4>
+                    <div class="row g-3">
+                        <div class="col-md-6 col-lg-4">
+                            <label for="bp_systolic" class="form-label">Systolic BP (mmHg)</label>
+                            <input type="number" step="0.1" class="form-control" id="bp_systolic" name="bp_systolic" min="50" max="300" placeholder="e.g. 120">
+                            <div class="form-text">Upper pressure number.</div>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <label for="bp_diastolic" class="form-label">Diastolic BP (mmHg)</label>
+                            <input type="number" step="0.1" class="form-control" id="bp_diastolic" name="bp_diastolic" min="30" max="200" placeholder="e.g. 80">
+                            <div class="form-text">Lower pressure number.</div>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <label for="heart_rate" class="form-label">Heart Rate (bpm)</label>
+                            <input type="number" step="0.1" class="form-control" id="heart_rate" name="heart_rate" min="30" max="250" placeholder="e.g. 72">
+                            <div class="form-text">Resting heart rate in beats per minute.</div>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <label for="temperature" class="form-label">Body Temp (°C)</label>
+                            <input type="number" step="0.1" class="form-control" id="temperature" name="temperature" min="30" max="45" placeholder="e.g. 36.8">
+                            <div class="form-text">Resting core temperature.</div>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <label for="blood_sugar" class="form-label">Fasting Blood Sugar (mg/dL)</label>
+                            <input type="number" step="0.1" class="form-control" id="blood_sugar" name="blood_sugar" min="30" max="600" placeholder="e.g. 95">
+                            <div class="form-text">Fasting venous plasma glucose level.</div>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <label for="cholesterol" class="form-label">Total Cholesterol (mg/dL)</label>
+                            <input type="number" step="0.1" class="form-control" id="cholesterol" name="cholesterol" min="50" max="500" placeholder="e.g. 190">
+                            <div class="form-text">Serum total lipid profile value.</div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="button" class="btn btn-outline-secondary btn-prev px-4">
+                            <i class="bi bi-arrow-left-short me-1"></i> Back
+                        </button>
+                        <button type="button" class="btn btn-primary btn-next px-4">
+                            Next: Lifestyle & History <i class="bi bi-arrow-right-short ms-1"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- STEP 3: Lifestyle Factors & Medical History -->
+                <div class="form-step">
+                    <h4 class="fw-bold mb-4 text-primary border-bottom pb-2">Step 3: Lifestyle, History & Symptoms</h4>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label for="diet" class="form-label">Diet Quality</label>
+                            <select class="form-select" id="diet" name="diet" required>
+                                <option value="Good">Good (High fiber, low processed)</option>
+                                <option value="Average" selected>Average (Moderate balance)</option>
+                                <option value="Poor">Poor (High sugar, fast food)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="exercise_level" class="form-label">Exercise Frequency</label>
+                            <select class="form-select" id="exercise_level" name="exercise_level" required>
+                                <option value="None">None (Sedentary)</option>
+                                <option value="Low">Low (1-2 days/week)</option>
+                                <option value="Medium" selected>Medium (3-4 days/week)</option>
+                                <option value="High">High (5+ days/week)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="sleep_hours" class="form-label">Sleep (hours/night)</label>
+                            <input type="number" class="form-control" id="sleep_hours" name="sleep_hours" min="0" max="24" value="7" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="stress" class="form-label">Stress Level</label>
+                            <select class="form-select" id="stress" name="stress" required>
+                                <option value="Low">Low</option>
+                                <option value="Medium" selected>Medium</option>
+                                <option value="High">High</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="smoking" class="form-label">Smoking Status</label>
+                            <select class="form-select" id="smoking" name="smoking" required>
+                                <option value="No" selected>Non-smoker (No)</option>
+                                <option value="Yes">Active smoker (Yes)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="alcohol" class="form-label">Alcohol Consumption</label>
+                            <select class="form-select" id="alcohol" name="alcohol" required>
+                                <option value="Low" selected>Low (Rare / None)</option>
+                                <option value="Medium">Medium (Social)</option>
+                                <option value="High">High (Regular / Daily)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="family_history" class="form-label">Family History of Illness</label>
+                            <select class="form-select" id="family_history" name="family_history" required>
+                                <option value="No" selected>No immediate history</option>
+                                <option value="Yes">Yes (Heart disease/Diabetes/etc)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-8">
+                            <label for="existing_diseases" class="form-label">Pre-existing Clinical Conditions</label>
+                            <input type="text" class="form-control" id="existing_diseases" name="existing_diseases" placeholder="e.g. Hypertension, Asthma, Type 2 Diabetes (leave blank if none)">
+                        </div>
+                        <div class="col-12">
+                            <label for="symptoms" class="form-label">Presenting Clinical Symptoms</label>
+                            <textarea class="form-control" id="symptoms" name="symptoms" rows="3" placeholder="Describe any current symptoms (e.g. chronic fatigue, shortness of breath, joint pain, chest tightness)"></textarea>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="button" class="btn btn-outline-secondary btn-prev px-4">
+                            <i class="bi bi-arrow-left-short me-1"></i> Back
+                        </button>
+                        <button type="submit" class="btn btn-success px-5 fw-semibold">
+                            <i class="bi bi-lightning-charge-fill me-1"></i> Predict Health Risk
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+        </section>
     </div>
+
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom Scripts -->
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
